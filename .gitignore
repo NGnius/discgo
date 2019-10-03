@@ -10,3 +10,9 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# potentially sensitive info
+*/config.json
+
+# binary executable
+*/discgo
