@@ -16,3 +16,6 @@
 
 # binary executable
 */discgo
+
+# downloaded libraries
+discgo/vendor/**
