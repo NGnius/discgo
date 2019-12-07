@@ -13,6 +13,8 @@
 
 # potentially sensitive info
 */config.json
+config.json
+*.log
 
 # binary executable
 */discgo
