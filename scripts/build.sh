@@ -3,4 +3,6 @@
 cd ./discgo
 go mod vendor
 go build
+EXIT_ERR=$?
 cd ..
+exit $EXIT_ERR
