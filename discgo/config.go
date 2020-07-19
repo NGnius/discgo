@@ -13,11 +13,11 @@ const (
 )
 
 var (
-  DefaultConfiguration = MasterConfiguration{
+  DefaultConfiguration = MainConfiguration{
     path: DefaultGlobalConfigPath,
     Version: "0000",
-    Configurations: map[string]SlaveConfiguration{
-      "main": SlaveConfiguration{
+    Configurations: map[string]SubordinateConfiguration{
+      "main": SubordinateConfiguration{
         Name: "main",
         Description: "Discgo's main configuration information (required)",
         Mappings: map[string]string {
@@ -61,13 +61,13 @@ func LoadDefaultGlobalConfigFile() (error) {
   return LoadGlobalConfigFile(DefaultGlobalConfigPath)
 }
 
-type MasterConfiguration struct {
+type MainConfiguration struct {
     Version string `json:"version"`
-    Configurations map[string]SlaveConfiguration `json:"configurations"`
+    Configurations map[string]SubordinateConfiguration `json:"configurations"`
     path string
 }
 
-func (conf *MasterConfiguration) Save() error {
+func (conf *MainConfiguration) Save() error {
     file, openErr := os.Create(conf.path)
     if openErr != nil {
       return openErr
@@ -88,35 +88,35 @@ func (conf *MasterConfiguration) Save() error {
     return nil
 }
 
-func (conf *MasterConfiguration) GetValue(confKey string, mapKey string) (value string, ok bool) {
-    var slave SlaveConfiguration
-    slave, ok = conf.Configurations[confKey]
+func (conf *MainConfiguration) GetValue(confKey string, mapKey string) (value string, ok bool) {
+    var subordinate SubordinateConfiguration
+    subordinate, ok = conf.Configurations[confKey]
     if !ok {
         return
     }
-    return slave.GetValue(mapKey)
+    return subordinate.GetValue(mapKey)
 }
 
-func (conf *MasterConfiguration) TryGetValue(confKey string, mapKey string) (value string) {
-    slave, ok := conf.Configurations[confKey]
+func (conf *MainConfiguration) TryGetValue(confKey string, mapKey string) (value string) {
+    subordinate, ok := conf.Configurations[confKey]
     if !ok {
         return
     }
-    return slave.TryGetValue(mapKey)
+    return subordinate.TryGetValue(mapKey)
 }
 
-type SlaveConfiguration struct {
-    Name string `json:"name"` // the name of the SlaveConfiguration, usually the key from MasterConfiguration.Mappings
-    Description string `json:"description"` // a brief description of the use of the SlaveConfiguration
+type SubordinateConfiguration struct {
+    Name string `json:"name"` // the name of the SubordinateConfiguration, usually the key from MainConfiguration.Mappings
+    Description string `json:"description"` // a brief description of the use of the SubordinateConfiguration
     Mappings map[string]string `json:"mappings"` // key:value pairs
 }
 
-func (slaveConf *SlaveConfiguration) GetValue(key string) (value string, ok bool) {
-    value, ok = slaveConf.Mappings[key]
+func (subordinateConf *SubordinateConfiguration) GetValue(key string) (value string, ok bool) {
+    value, ok = subordinateConf.Mappings[key]
     return
 }
 
-func (slaveConf *SlaveConfiguration) TryGetValue(key string) (value string) {
-    value = slaveConf.Mappings[key]
+func (subordinateConf *SubordinateConfiguration) TryGetValue(key string) (value string) {
+    value = subordinateConf.Mappings[key]
     return
 }
